@@ -1,0 +1,12 @@
+body {
+    padding: 10px;
+}
+
+.custom-card-height {
+    height: 200px; /* Adjust the card height value as needed */
+}
+
+.custom-image-height {
+    height: 100%; /* Set the image height to 100% of the parent container (card) */
+    object-fit: cover; /* Ensure the image covers the entire container */
+}

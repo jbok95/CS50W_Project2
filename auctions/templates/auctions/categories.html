@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2>All Categories</h2>
+
+    {% if category == "all" %}
+        {% for c in all_categories %}
+        <ul>
+            <a href="{% url 'categories' c %}">
+                <li>{{c}}</li>
+            </a>
+        </ul>
+        {% endfor %}
+    {% else %}
+        <div class="row">
+            {% for listing in listings %}
+                {% if listing.category == category %}
+                    <div class="col mb-3">
+                        <div class="card h-100" style="width: 18rem;">
+                            <a href="{% url 'listing' listing.id %}">
+                                <img src="{{ listing.picture }}" class="card-img-top" alt="{{ listing.title }} listing">
+                                <div class="card-body">
+                                    <h5 class="card-title"><strong>{{ listing.title }}</strong></h5>
+                                </div>
+                            </a>
+                            <p class="card-body card-text">{{ listing.description }}</p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Current Price: </strong>${{ listing.price }}</li>
+                                <li class="list-group-item"><strong>Category: </strong>{{ listing.category }}</li>
+                            </ul>
+                            </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

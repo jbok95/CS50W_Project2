@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Listing, Bid, Category
+from .models import User, Listing, Bid, Category, Comment
 from .forms import ListingForm, BidForm
 
 def index(request):
@@ -86,11 +86,13 @@ def register(request):
 
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
+    comments = Comment.objects.filter(listing=listing)
     bid_count = listing.bids.count()
 
     return render(request, "auctions/listing.html",{
         "listing": listing,
-        "bid_count": bid_count
+        "bid_count": bid_count,
+        "comments": comments
     })
 
 @login_required
@@ -179,3 +181,12 @@ def watchlist(request):
     return render(request, "auctions/index.html",{
         "listings": watchlist
     })
+
+@login_required
+def add_comment(request, listing_id):
+    if request.method == 'POST':
+        listing = Listing.objects.get(pk=listing_id)
+        content = request.POST.get('content')
+        Comment.objects.create(listing=listing, commenter=request.user, content=content)
+
+    return HttpResponseRedirect(reverse('listing', args=[listing_id]))

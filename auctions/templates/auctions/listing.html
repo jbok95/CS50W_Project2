@@ -28,7 +28,7 @@
     {% endif %}
 
     {% if error %}
-    <div class="alert alert-danger" role="alert">{{ error }}</div>
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
     {% endif %}
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -53,7 +53,26 @@
                     <li class="list-group-item"><strong>Total Bids: </strong>{{ bid_count }}</li>
                     <li class="list-group-item"><strong>Total Watchers: </strong></li>
                 </ul>
-                </div>
+            </div>
         </div>
     </div>
+    <br>
+    <h3>Comments</h3>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <strong>{{ comment.commenter.username }}</strong>
+                <span class="comment-timestamp">({{ comment.timestamp|date:"N j, Y, H:i" }}):</span>
+                {{ comment.content }}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add_comment' listing.id %}">
+            {% csrf_token %}
+            <textarea name="content" id="content" cols="50" rows="4"></textarea>
+            <br>
+            <button type="submit" class="btn btn-primary">Add Comment</button>
+        </form>
+    {% endif %}
 {% endblock %}

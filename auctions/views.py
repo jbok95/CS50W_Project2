@@ -15,18 +15,24 @@ def index(request):
         "listings": listings
     })
 
-def categories(request, category="all"):
+def categories(request, category):
     all_categories = Category.objects.all()
-    listings = Listing.objects.all()
-
-    if request.method == "POST": 
-        return HttpResponseRedirect(reverse("categories", args=[category, listings]))
-
+    if category=='all':
+        listings = Listing.objects.filter(active=True)
     else:
-        return render(request, "auctions/categories.html",{
+        category_choice = Category.objects.get(category=category)
+        listings = Listing.objects.filter(category=category_choice, active=True)
+
+    context = {
         "category": category,
-        "all_categories": all_categories
-    })
+        "all_categories": all_categories,
+        "listings": listings
+    }
+
+    if not listings.exists():
+        context["no_listings"] = True
+
+    return render(request, "auctions/categories.html", context)
 
 def login_view(request):
     if request.method == "POST":

@@ -1,9 +1,8 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<h2>All Categories</h2>
-
     {% if category == "all" %}
+        <h2>All Categories</h2>
         {% for c in all_categories %}
         <ul>
             <a href="{% url 'categories' c %}">
@@ -12,9 +11,12 @@
         </ul>
         {% endfor %}
     {% else %}
+        <h2>{{category}}</h2>
+        {% if no_listings %}
+            <p>No active listings found in category {{category}}</p>
+        {% else %}
         <div class="row">
             {% for listing in listings %}
-                {% if listing.category == category %}
                     <div class="col mb-3">
                         <div class="card h-100" style="width: 18rem;">
                             <a href="{% url 'listing' listing.id %}">
@@ -30,8 +32,8 @@
                             </ul>
                             </div>
                     </div>
-                {% endif %}
             {% endfor %}
         </div>
+        {% endif %}
     {% endif %}
 {% endblock %}
